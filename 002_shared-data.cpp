@@ -8,17 +8,17 @@ using namespace std;
 int main()
 {
     atomic<int> count = 0;
-    const int ITERATIONS = 1E6;
+    const int ITERS = 1E6;
 
-    thread t1([&count](){
-        for (int i = 0; i < ITERATIONS; ++i)
+    thread t1([&count, ITERS](){
+        for (int i = 0; i < ITERS; ++i)
         {
             count++;
         }
     });
 
-    thread t2([&count](){
-        for (int i = 0; i < ITERATIONS; ++i)
+    thread t2([&count, ITERS](){
+        for (int i = 0; i < ITERS; ++i)
         {
             count++;
         }
