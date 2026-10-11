@@ -10,10 +10,10 @@ int main(){
 
     auto func = [&](){ // Lambda function to increment count
         for (int i = 0; i < ITERS; ++i) {
-            //mtx.lock();
-            lock_guard<mutex> lock(mtx);
+            //lock_guard<mutex> lock(mtx);
+            mtx.lock();
             count++;
-            //mtx.unlock();
+            mtx.unlock();
         }
     };
     thread t1(func);
