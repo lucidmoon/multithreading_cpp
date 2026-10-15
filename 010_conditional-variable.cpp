@@ -53,7 +53,7 @@ int main()
         unique_lock<mutex> lock2(mtx); // lock the mutex before waiting for the condition variable
         while(!condition2.wait_for(lock2, chrono::milliseconds(300), [&ready2] { return ready2; })) // wait for the condition variable to be notified and the shared variable to be true
         {
-            cout << "Waiting for thread 1 to finish..." << endl;
+            cout << "Waiting for thread 2 to finish..." << endl;
         }
         lock2.unlock(); // unlock the mutex after waiting for the condition variable
     }
