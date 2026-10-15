@@ -1,7 +1,10 @@
+//010_conditional-variable
+// cleaner way from 009 using conditional_variable
 #include <iostream>
 #include <thread>
 #include <mutex>
 #include <condition_variable>
+#include <chrono>
 
 using namespace std;
 
@@ -11,6 +14,9 @@ int main()
     bool ready2 = false; // shared variable to indicate if the thread is ready
     mutex mtx; // mutex to protect the shared variable
     condition_variable condition, condition2; // condition variable to synchronize threads
+
+    // print the initial values of ready and ready2
+    cout << "ready = " << ready << ", ready2 = " << ready2 << endl;
 
     thread t1 ([&]() // lambda function to run in thread 1
     {
@@ -30,20 +36,33 @@ int main()
         condition2.notify_one(); // notify the waiting thread that the condition has changed
     });
 
+    //cleaner way
+    {
+        unique_lock<mutex> lock(mtx); // lock the mutex before checking the shared variable
+        while(!condition.wait_for(lock, chrono::milliseconds(300), [&ready] { return ready; })) // condition variable to synchronize threads
+        {
+            cout << "Waiting for thread 1 to finish..." << endl;
+        }
+        lock.unlock(); // unlock the mutex before waiting for the condition variable
+    }
+    
 
-    unique_lock<mutex> lock(mtx); // lock the mutex before checking the shared variable
-    condition.wait(lock, [&ready] { return ready; }); // condition variable to synchronize threads
-    lock.unlock(); // unlock the mutex before waiting for the condition variable
-
-    unique_lock<mutex> lock2(mtx); // lock the mutex before waiting for the condition variable
-    condition2.wait(lock2, [&ready2] { return ready2; }); // wait for the condition variable to be notified and the shared variable to be true
-    lock2.unlock(); // unlock the mutex after waiting for the condition variable
-
-    cout << "Threads have finished" << endl;
+    {
+        unique_lock<mutex> lock2(mtx); // lock the mutex before waiting for the condition variable
+        while(!condition2.wait_for(lock2, chrono::milliseconds(300), [&ready2] { return ready2; })) // wait for the condition variable to be notified and the shared variable to be true
+        {
+            cout << "Waiting for thread 1 to finish..." << endl;
+        }
+        lock2.unlock(); // unlock the mutex after waiting for the condition variable
+    }
     
     // wait for the threads to finish
     t1.join();
     t2.join();
+
+    // print the final values of ready and ready2
+    cout << "ready = " << ready << ", ready2 = " << ready2 << endl;
+    cout << "Threads have finished" << endl;
 
     return 0;
 }

@@ -2,7 +2,6 @@
 //program to demonstrate how to wait for a thread to finish using condition_variable and mutex
 // naive way using sleep_for is not recommended as it wastes CPU cycles and can lead to race conditions
 // better way is to use condition_variable and mutex to synchronize threads
-// cleaner version is to use condition_variable with lambda function to wait for the condition to be met
 #include <iostream>
 #include <thread>
 #include <chrono>
@@ -54,7 +53,7 @@ int main()
     }
     */
 
-    /*
+    
     // better way using condition_variable
     unique_lock<mutex> lock(mtx); // lock the mutex before waiting
     while (!ready) // wait until the condition variable is notified
@@ -70,22 +69,13 @@ int main()
         condition2.wait(lock2); // wait for the condition variable to be notified
     }
     lock2.unlock();
-    */
-
-    // cleaner version using condition_variable with lambda function
-    unique_lock<mutex> lock(mtx);
-    condition.wait(lock, [&]() { return ready; });
-    lock.unlock();
-
-    unique_lock<mutex> lock2(mtx2);
-    condition2.wait(lock2, [&]() { return ready2; });
-    lock2.unlock();
-
+    
     t1.join(); // wait for thread 1 to finish
     t2.join(); // wait for thread 2 to finish
 
     // print the final values of ready and ready2
     cout << "ready = " << ready << ", ready2 = " << ready2 << endl;
+    cout << "Threads have finished" << endl;
     
     return 0;
 }
