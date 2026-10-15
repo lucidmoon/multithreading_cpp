@@ -1,5 +1,7 @@
 //010_conditional-variable
 // cleaner way from 009 using conditional_variable
+// Why it's cleaner? because it only use 1 mutex being re-locked (no wasted memory) since we use block scope { } that force lock to clean up via RAII (Resources Acquisition Is Initialization)
+// and have timed polling (300ms) status checking instead of indefinite blocking in 009
 #include <iostream>
 #include <thread>
 #include <mutex>
