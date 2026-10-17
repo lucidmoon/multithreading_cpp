@@ -1,4 +1,6 @@
-// 011_method-in-thread.cpp
+// 011_blocking-queues.cpp
+// the idea is to make a queue that accessible with multithreads
+// Work in Progress...
 #include <iostream>
 #include <thread>
 
