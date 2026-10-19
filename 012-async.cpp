@@ -1,4 +1,7 @@
-//012_async.cpp
+// 012_async.cpp
+// demonstrates the use of std::async to run tasks asynchronously in C++17.
+// The async function is used to launch a task in a separate thread and returns a future object 
+// that can be used to retrieve the result of the task once it has completed..
 
 #include <iostream>
 #include <future>
