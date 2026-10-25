@@ -78,6 +78,7 @@ int main() {
     cout << setprecision(15) << "Calculated PI: " << sum2 << endl; // print calculated value of pi
     cout << "Duration: " << duration2 << " ms" << endl;
     cout << "============================================" << endl;
+    cout << "Difference multithread vs without multithread = " << duration2 - duration << " ms"<< endl;
 
     return 0;
 }
